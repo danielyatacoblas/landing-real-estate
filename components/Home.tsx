@@ -1,9 +1,12 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Lenis from 'lenis';
-import { gsap, ScrollTrigger, reduced } from '@/lib/motion';
+import { gsap, reduced } from '@/lib/motion';
+import { startSmoothScroll } from '@/lib/smooth';
+import DemoCta from './DemoCta';
+import { waLink } from '@/lib/contact';
 import { WORKPLACES } from '@/lib/listings';
+import Select from './Select';
 import Finder, { type Filters } from './Finder';
 import Detail from './Detail';
 
@@ -15,12 +18,8 @@ export default function Home() {
   const method = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (reduced()) return;
-    const lenis = new Lenis({ duration: 1.05 });
-    lenis.on('scroll', ScrollTrigger.update);
-    const tick = (t: number) => lenis.raf(t * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    const stop = startSmoothScroll();
+    if (reduced()) return stop;
     const ctx = gsap.context(() => {
       gsap.from('.hero__h > span', { yPercent: 105, duration: 1.2, ease: 'expo.out', stagger: 0.08, delay: 0.1 });
       gsap.from('.ask', { y: 30, opacity: 0, duration: 1, ease: 'expo.out', delay: 0.5 });
@@ -28,7 +27,7 @@ export default function Home() {
       // Las estelas de los autos: el texto del método avanza en horizontal con el scroll.
       gsap.fromTo('.method__trail', { xPercent: 0 }, { xPercent: -40, ease: 'none', scrollTrigger: { trigger: method.current, scrub: true } });
     });
-    return () => { ctx.revert(); gsap.ticker.remove(tick); lenis.destroy(); };
+    return () => { ctx.revert(); stop(); };
   }, []);
 
   function go() {
@@ -52,18 +51,8 @@ export default function Home() {
             <span>no por el distrito.</span>
           </h1>
           <form className="ask" onSubmit={(e) => { e.preventDefault(); go(); }} aria-label="Empieza tu búsqueda">
-            <label>
-              <span>Trabajo en</span>
-              <select value={f.work} onChange={(e) => setF({ ...f, work: e.target.value })}>
-                {WORKPLACES.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
-              </select>
-            </label>
-            <label>
-              <span>Quiero llegar en</span>
-              <select value={f.maxMin} onChange={(e) => setF({ ...f, maxMin: Number(e.target.value) })}>
-                {[20, 30, 45, 60].map((m) => <option key={m} value={m}>{m} minutos o menos</option>)}
-              </select>
-            </label>
+            <Select className="sel--glass" label="Trabajo en" value={f.work} onChange={(v) => setF({ ...f, work: v })} options={WORKPLACES.map((w) => ({ value: w.id, label: w.name }))} />
+            <Select className="sel--glass" label="Quiero llegar en" value={String(f.maxMin)} onChange={(v) => setF({ ...f, maxMin: Number(v) })} options={[20, 30, 45, 60].map((m) => ({ value: String(m), label: `${m} minutos o menos` }))} />
             <button type="submit" className="btn btn--accent">Ver depas</button>
           </form>
         </section>
@@ -93,12 +82,13 @@ export default function Home() {
       <footer className="ft">
         <p className="ft__big">cerca<span>.</span></p>
         <div className="ft__row">
-          <p>Cerca es una inmobiliaria ficticia creada para portafolio. Departamentos, precios y tiempos son de demostración. Mapa: OpenFreeMap, © OpenMapTiles, © colaboradores de OpenStreetMap. Fotos: <a href="https://www.pexels.com" rel="noopener">Pexels</a>.</p>
-          <a className="badge" href="https://github.com/danielyatacoblas" rel="noopener">Diseñado y desarrollado por Daniel Yataco</a>
+          <p>Diseño demo: Cerca es una inmobiliaria ficticia; departamentos, precios y tiempos son de ejemplo. ¿Quieres una web así para tu inmobiliaria? Mapa: OpenFreeMap, © OpenMapTiles, © colaboradores de OpenStreetMap. Fotos: <a href="https://www.pexels.com" rel="noopener">Pexels</a>.</p>
+          <a className="badge" href={waLink('Cerca (inmobiliaria)')} target="_blank" rel="noopener">Diseño y desarrollo: Daniel Yataco · WhatsApp <span className="nowrap">975 118 790</span></a>
         </div>
       </footer>
 
       <Detail id={open} onClose={() => setOpen(null)} />
+      <DemoCta site="Cerca (inmobiliaria)" />
     </>
   );
 }

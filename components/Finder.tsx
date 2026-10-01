@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { LISTINGS, WORKPLACES } from '@/lib/listings';
 import { commuteMin, type Mode } from '@/lib/commute';
 import { gsap, reduced } from '@/lib/motion';
+import Select from './Select';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false, loading: () => <div className="map"><p className="map__state">Cargando mapa de Lima…</p></div> });
 
@@ -43,12 +44,7 @@ export default function Finder({ f, setF, active, setActive, onOpen }: {
           <span className="tnum">{visible.size}</span> de {LISTINGS.length} depas a {f.maxMin} min o menos de {work.short}
         </h2>
         <form className="filters" onSubmit={(e) => e.preventDefault()} aria-label="Filtros">
-          <label className="ctl">
-            <span>Trabajo en</span>
-            <select value={f.work} onChange={(e) => setF({ ...f, work: e.target.value })}>
-              {WORKPLACES.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
-            </select>
-          </label>
+          <Select className="ctl ctl--work" label="Trabajo en" value={f.work} onChange={(v) => setF({ ...f, work: v })} options={WORKPLACES.map((w) => ({ value: w.id, label: w.name }))} />
           <fieldset className="ctl">
             <legend>Salgo en</legend>
             <div className="seg" role="radiogroup" aria-label="Hora de salida">
@@ -63,12 +59,7 @@ export default function Finder({ f, setF, active, setActive, onOpen }: {
             <span>Máximo <b className="tnum">{f.maxMin} min</b></span>
             <input type="range" min={15} max={75} step={5} value={f.maxMin} onChange={(e) => setF({ ...f, maxMin: Number(e.target.value) })} />
           </label>
-          <label className="ctl">
-            <span>Presupuesto</span>
-            <select value={f.budget} onChange={(e) => setF({ ...f, budget: Number(e.target.value) })}>
-              {BUDGETS.map((b) => <option key={b} value={b}>Hasta {usd(b)}</option>)}
-            </select>
-          </label>
+          <Select className="ctl" label="Presupuesto" value={String(f.budget)} onChange={(v) => setF({ ...f, budget: Number(v) })} options={BUDGETS.map((b) => ({ value: String(b), label: `Hasta ${usd(b)}` }))} />
           <fieldset className="ctl">
             <legend>Dormitorios</legend>
             <div className="seg" role="radiogroup" aria-label="Dormitorios mínimos">
