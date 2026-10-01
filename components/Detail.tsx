@@ -4,6 +4,9 @@ import Image from 'next/image';
 import { LISTINGS, WORKPLACES } from '@/lib/listings';
 import { commuteMin, mortgage } from '@/lib/commute';
 import { sb } from '@/lib/supabase';
+import Select from './Select';
+
+const WHEN = ['Entre semana después de las 6 p. m.', 'Sábado en la mañana', 'Sábado en la tarde'];
 
 const usd = (n: number) => `US$ ${n.toLocaleString('en-US')}`;
 
@@ -13,6 +16,7 @@ export default function Detail({ id, onClose }: { id: string | null; onClose: ()
   const [years, setYears] = useState(20);
   const [err, setErr] = useState<{ name?: string; phone?: string }>({});
   const [sent, setSent] = useState(false);
+  const [when, setWhen] = useState(WHEN[1]);
   const l = LISTINGS.find((x) => x.id === id);
 
   useEffect(() => {
@@ -76,7 +80,7 @@ export default function Detail({ id, onClose }: { id: string | null; onClose: ()
               <form className="visit" onSubmit={submit} noValidate>
                 <label className="ctl"><span>Nombre</span><input name="name" autoComplete="name" aria-invalid={!!err.name} aria-describedby="v-name" /><small id="v-name" className="err">{err.name}</small></label>
                 <label className="ctl"><span>Celular</span><input name="phone" inputMode="numeric" autoComplete="tel-national" placeholder="9XX XXX XXX" aria-invalid={!!err.phone} aria-describedby="v-phone" /><small id="v-phone" className="err">{err.phone}</small></label>
-                <label className="ctl"><span>¿Cuándo?</span><select name="when" defaultValue="Sábado en la mañana"><option>Entre semana después de las 6 p. m.</option><option>Sábado en la mañana</option><option>Sábado en la tarde</option></select></label>
+                <Select className="ctl visit__when" label="¿Cuándo?" name="when" value={when} onChange={setWhen} options={WHEN.map((x) => ({ value: x, label: x }))} />
                 <button type="submit" className="btn btn--accent">Agendar visita</button>
               </form>
             )}

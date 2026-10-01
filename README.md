@@ -80,6 +80,10 @@ npm run build
 - Fotografía: [Pexels](https://www.pexels.com). Mapa: [OpenFreeMap](https://openfreemap.org), © OpenMapTiles, © colaboradores de OpenStreetMap.
 - Cerca es ficticia: departamentos, precios y ubicaciones aproximadas son de demostración; los tiempos son estimaciones.
 
+## Contacto
+
+¿Quieres una web así para tu negocio? Escríbeme por WhatsApp al **[975 118 790](https://wa.me/51975118790)**.
+
 ---
 
 Diseñado y desarrollado por [Daniel Yataco](https://github.com/danielyatacoblas).

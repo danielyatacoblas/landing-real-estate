@@ -8,7 +8,7 @@ const text = Funnel_Sans({ subsets: ['latin'], variable: '--font-text', display:
 export const metadata: Metadata = {
   metadataBase: new URL('https://landing-real-estate-danielyatacoblas-projects.vercel.app'),
   title: 'Cerca — Departamentos en Lima a minutos de tu trabajo',
-  description: 'Busca departamentos en Lima por tiempo de viaje al trabajo en hora punta. Mapa interactivo, cuota hipotecaria y visitas. Demo de portafolio de Daniel Yataco.',
+  description: 'Busca departamentos en Lima por tiempo de viaje al trabajo en hora punta. Mapa interactivo, cuota hipotecaria y visitas. Diseño demo de Daniel Yataco · WhatsApp 975 118 790.',
   openGraph: { title: 'Cerca — Elige tu depa por los minutos al trabajo', description: 'Mapa de Lima filtrado por tiempo de viaje.', images: ['/img/hero.jpg'] },
 };
 
